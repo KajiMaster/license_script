@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ADDR="To: blake.mcneal@fundtehc.com"
+ADDR="To: blake.mcneal@fundtech.com"
 SCRIPT="From: license_notify@update.com"
 SUBJ="Licenses: Less Then 90 Days Left"
 BODY="This is a automated script to notify the status of licenses in used."
@@ -18,14 +18,17 @@ FUTURE90="$(date "+%Y%m%d" -d "+90 days")"
 function send_notice {
     while read line
         do BODY="$BODY\n$line"
-    done < "body.txt"
+    done < $OUTPUT
     EMAIL="$ADDR\n$SCRIPT\n$SUBJ\n$BODY\n"
     echo -e $EMAIL | /usr/sbin/sendmail -t
     echo -e Email sent to $ADDR
 }
 
+# Clean previous body.txt if anything is in it.
+> $OUTPUT
+
 # Check exp date & Populate email
-[ ! -f $INPUT ] && { echo "$INPUT file not found"; exit 99; }
+#[ ! -f $INPUT ] && { echo "$INPUT file not found"; exit 99; }
 while read product exp_date
 do
     if [ "$exp_date" -gt "$FUTURE90" ]
